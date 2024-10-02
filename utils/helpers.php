@@ -7,7 +7,7 @@ use \Firebase\JWT\Key;
 use \Exception;
 
 function generateJwtToken($user) {
-    // obs: como é um teste, não criei varaveis de ambiente para gerenciar as keys
+    // obs: como é um teste, key está aqui dentro exposta
     $secretKey = 'chaveSuperSecretadaCodesh123@';
     $issuedAt = time();
     $expirationTime = $issuedAt + 3600;
@@ -49,5 +49,17 @@ function writeJsonFile($filename, $data) {
     file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT));
 }
 
+function saveToHistory($userId, $word) {
+    $historyFile = __DIR__ ."/../../data/history.json";
 
+    $historyData = file_exists($historyFile) ? 
+    json_decode(file_get_contents($historyFile), true ) : [];
+
+    $historyData[$userId] [] = [
+        'word' => $word,
+        'timestamp' => date('Y-m-d H:i:s')
+    ];
+
+    file_put_contents($historyFile, json_encode($historyData, JSON_PRETTY_PRINT));
+}
 
